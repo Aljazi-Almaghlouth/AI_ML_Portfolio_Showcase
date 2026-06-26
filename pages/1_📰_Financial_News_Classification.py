@@ -24,19 +24,31 @@ show_header("reuters_header.png")
 # ============================================================
 st.set_page_config(page_title="Financial News Classification", page_icon="📰", layout="wide")
 apply_style(); sidebar()
-p = next(x for x in PROJECTS if x['slug']=='news')
+p = next((x for x in PROJECTS if x.get("slug") == "news"), PROJECTS[0])
 
 #st.image(p['banner'], use_container_width=True)
 st.title("Financial News Classification")
 st.caption("Reuters Dataset · Multi-Class NLP Classification")
 
 cols = st.columns(4)
-for col, (label, value) in zip(cols, p['metrics']):
+for col, (label, value) in zip(cols, p.get("metrics", [])):
     col.markdown(f'<div class="metric-box"><div class="metric-label">{label}</div><div class="metric-value">{value}</div></div>', unsafe_allow_html=True)
 
 left, right = st.columns([1.2, .8])
+
 with left:
-    st.markdown(f'<div class="section-box"><h2>Project objective</h2><p style="color:#D1D5DB;line-height:1.65;">{p["summary"]}</p><p style="color:#D1D5DB;line-height:1.65;"><b>Business translation:</b> {p["business_value"]}</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-box">', unsafe_allow_html=True)
+
+    st.markdown("## Project objective")
+
+    st.write(p.get("summary", ""))
+
+    st.markdown(
+        f"**Business translation:** {p.get('business_value', '')}"
+    )
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
     topic_data = pd.DataFrame({
         "Topic": ["Class 3", "Class 4", "Class 19", "Class 16", "Class 1", "Other classes"],
         "Count": [3159, 1949, 549, 444, 432, 2449]
